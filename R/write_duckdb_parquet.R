@@ -1,11 +1,11 @@
-#' Écrit un fichier parquet depuis une requête duckdb
-#' @param conn Connexion duckdb, par exemple db$conn
-#' @param query Requête duckdb
-#' @param path nom du fichier ou répertoire si partition est renseigné
-#' @param compression_level, entre 1 et 22, 3 par défaut
-#' @param partition chaine de la forme "var1, var2" pour créer une partition, pas de partition par défaut
-#' @param verbose indique la requete SQL générée
-#' @return Chemin du fichier parquet créé
+#' Writes a parquet file from a duckdb query
+#' @param conn duckdb connection, e.g. db$conn
+#' @param query duckdb query
+#' @param path file name or directory if partition is specified
+#' @param compression_level between 1 and 22, default 3
+#' @param partition string of the form "var1, var2" to create a partition, no partition by default
+#' @param verbose prints the generated SQL query
+#' @return Path of the created parquet file
 #' @export
 write_duckdb_parquet_sql <- function(
   conn,
@@ -26,15 +26,15 @@ write_duckdb_parquet_sql <- function(
   path
 }
 
-#' Écrit un fichier parquet depuis une table duckdb
-#' @param table table duckdb
-#' @param path nom du fichier ou répertoire si partition est renseigné, par défaut le nom de la table
-#' @param dir répertoire de sortie, éventuellement s3
-#' @param compression_level, entre 1 et 22, 3 par défaut
-#' @param partition chaine de la forme "var1, var2" pour créer une partition, pas de partition par défaut
-#' @param keep Si TRUE, renvoit la table fournie en entrée sinon la table liée au fichier parquet créé. FALSE par défaut.
-#' @param verbose indique la requete SQL générée
-#' @return table dplyr liée au fichier parquet créé (voir paramètre 'keep' pour conserver la table en entrée)
+#' Writes a parquet file from a duckdb table
+#' @param table duckdb table
+#' @param path file name or directory if partition is specified, defaults to the table name
+#' @param dir output directory, optionally an S3 path
+#' @param compression_level between 1 and 22, default 3
+#' @param partition string of the form "var1, var2" to create a partition, no partition by default
+#' @param keep If TRUE, returns the input table, otherwise returns the table linked to the created parquet file. Defaults to FALSE.
+#' @param verbose prints the generated SQL query
+#' @return dplyr table linked to the created parquet file (see 'keep' parameter to retain the input table)
 #' @export
 
 write_duckdb_parquet <- function(
@@ -78,13 +78,13 @@ write_duckdb_parquet <- function(
     tbl_pqt(table$src$con, path)
 }
 
-#' Écrit fichier parquet depuis une table duckdb
+#' Writes a parquet file from a data frame
 #' @param df data.frame
-#' @param conn Connexion duckdb, par exemple db$conn
-#' @param path Nom du fichier, par défaut le nom de la table.parquet
-#' @param dir Répertoire de sortie, éventuellement s3, par défaut répertoire courant
-#' @param keep Si TRUE, renvoit le data.frame fourni en entrée sinon la table liée au fichier parquet créé. FALSE par défaut.
-#' @return table dplyr liée au fichier parquet créé (voir paramètre 'keep' pour conserver le data.frame en entrée)
+#' @param conn duckdb connection, e.g. db$conn
+#' @param path file name, defaults to the table name with .parquet extension
+#' @param dir output directory, optionally an S3 path, defaults to current directory
+#' @param keep If TRUE, returns the input data.frame, otherwise returns the table linked to the created parquet file. Defaults to FALSE.
+#' @return dplyr table linked to the created parquet file (see 'keep' parameter to retain the input data.frame)
 #' @export
 write_df_parquet <- function (df, conn, path, dir = NULL, keep = FALSE)
 {

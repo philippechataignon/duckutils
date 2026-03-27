@@ -2,24 +2,24 @@
 % Please edit documentation in R/write_duckdb_parquet.R
 \name{write_df_parquet}
 \alias{write_df_parquet}
-\title{Écrit fichier parquet depuis une table duckdb}
+\title{Writes a parquet file from a data frame}
 \usage{
 write_df_parquet(df, conn, path, dir = NULL, keep = FALSE)
 }
 \arguments{
 \item{df}{data.frame}
 
-\item{conn}{Connexion duckdb, par exemple db$conn}
+\item{conn}{duckdb connection, e.g. db\$conn}
 
-\item{path}{Nom du fichier, par défaut le nom de la table.parquet}
+\item{path}{file name, defaults to the table name with .parquet extension}
 
-\item{dir}{Répertoire de sortie, éventuellement s3, par défaut répertoire courant}
+\item{dir}{output directory, optionally an S3 path, defaults to current directory}
 
-\item{keep}{Si TRUE, renvoit le data.frame fourni en entrée sinon la table liée au fichier parquet créé. FALSE par défaut.}
+\item{keep}{If TRUE, returns the input data.frame, otherwise returns the table linked to the created parquet file. Defaults to FALSE.}
 }
 \value{
-table dplyr liée au fichier parquet créé (voir paramètre 'keep' pour conserver le data.frame en entrée)
+dplyr table linked to the created parquet file (see 'keep' parameter to retain the input data.frame)
 }
 \description{
-Écrit fichier parquet depuis une table duckdb
+Writes a parquet file from a data frame
 }

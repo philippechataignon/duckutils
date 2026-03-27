@@ -2,22 +2,22 @@
 % Please edit documentation in R/postgres.R
 \name{pg_attach}
 \alias{pg_attach}
-\title{Attache une base Postgres à duckdb}
+\title{Attaches a Postgres database to duckdb}
 \usage{
 pg_attach(conn, param, db = "pg", schema = "public")
 }
 \arguments{
-\item{conn}{connexion duckdb, peut être obtenu par la fonction get_conn}
+\item{conn}{duckdb connection, can be obtained via the get_conn function}
 
-\item{param}{liste de paramètres}
+\item{param}{list of parameters}
 
-\item{db}{nom de l'alias de la base}
+\item{db}{alias name for the database}
 
-\item{schema}{nom du schema Postgres, 'public' par défaut}
+\item{schema}{Postgres schema name, defaults to 'public'}
 }
 \value{
-Code retour dbExecute
+dbExecute return code
 }
 \description{
-Attache une base Postgres à duckdb
+Attaches a Postgres database to duckdb
 }

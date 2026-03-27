@@ -2,16 +2,16 @@
 % Please edit documentation in R/duckdb.R
 \name{refresh_secret}
 \alias{refresh_secret}
-\title{Crée un secret à partir des variables env S3}
+\title{Creates a secret from S3 environment variables}
 \usage{
 refresh_secret(conn)
 }
 \arguments{
-\item{conn}{Connexion duckdb}
+\item{conn}{duckdb connection}
 }
 \value{
-Code retour duckdb
+duckdb return code
 }
 \description{
-Crée un secret à partir des variables env S3
+Creates a secret from S3 environment variables
 }

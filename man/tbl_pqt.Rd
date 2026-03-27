@@ -2,23 +2,22 @@
 % Please edit documentation in R/duckdb.R
 \name{tbl_pqt}
 \alias{tbl_pqt}
-\title{Renvoit une table duckdb depuis un fichier parquet y.c S3}
+\title{Returns a duckdb table from a parquet file including S3}
 \usage{
 tbl_pqt(conn, path, level = 0, lower = FALSE, verbose = FALSE)
 }
 \arguments{
-\item{conn}{Connexion duckdb}
+\item{conn}{duckdb connection}
 
-\item{path}{Chemin de la table/répertoire parquet}
+\item{path}{Path to the parquet table/directory}
 
-\item{level}{Nombre de niveaux dans le cas de fichiers parquet partitionnés,
-par défaut 0 si pas de partionnement}
+\item{level}{Number of levels for partitioned parquet files, default 0 if not partitioned}
 
-\item{lower}{Si TRUE, les variables sont converties en minuscules}
+\item{lower}{If TRUE, variable names are converted to lowercase}
 }
 \value{
-Liste de tables duckdb
+List of duckdb tables
 }
 \description{
-Renvoit une table duckdb depuis un fichier parquet y.c S3
+Returns a duckdb table from a parquet file including S3
 }

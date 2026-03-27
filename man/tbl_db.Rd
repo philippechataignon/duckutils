@@ -2,18 +2,18 @@
 % Please edit documentation in R/duckdb.R
 \name{tbl_db}
 \alias{tbl_db}
-\title{Renvoie une liste de tables depuis une database duckdb}
+\title{Returns a list of tables from a duckdb database}
 \usage{
 tbl_db(conn, db, verbose = FALSE)
 }
 \arguments{
-\item{conn}{Connexion duckdb, peut être obtenu par la fonction get_conn}
+\item{conn}{duckdb connection, can be obtained via the get_conn function}
 
-\item{db}{Nom de la database duckdb}
+\item{db}{Name of the duckdb database}
 }
 \value{
-Liste de tables
+List of tables
 }
 \description{
-Renvoie une liste de tables depuis une database duckdb
+Returns a list of tables from a duckdb database
 }

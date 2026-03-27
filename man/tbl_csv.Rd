@@ -2,22 +2,22 @@
 % Please edit documentation in R/duckdb.R
 \name{tbl_csv}
 \alias{tbl_csv}
-\title{Renvoit une table duckdb depuis un fichier csv y.c S3}
+\title{Returns a duckdb table from a CSV file including S3}
 \usage{
 tbl_csv(conn, path, ..., lower = FALSE, verbose = FALSE)
 }
 \arguments{
-\item{conn}{Connexion duckdb}
+\item{conn}{duckdb connection}
 
-\item{path}{Chemin du fichier csv}
+\item{path}{Path to the CSV file}
 
-\item{...}{Options à passer à la fonction read_csv du duckdb}
+\item{...}{Options to pass to the duckdb read_csv function}
 
-\item{lower}{Si TRUE, les variables sont converties en minuscules}
+\item{lower}{If TRUE, variable names are converted to lowercase}
 }
 \value{
-Table duckdb
+duckdb table
 }
 \description{
-Renvoit une table duckdb depuis un fichier csv y.c S3
+Returns a duckdb table from a CSV file including S3
 }

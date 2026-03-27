@@ -2,7 +2,7 @@
 % Please edit documentation in R/write_duckdb_parquet.R
 \name{write_duckdb_parquet}
 \alias{write_duckdb_parquet}
-\title{Écrit un fichier parquet depuis une table duckdb}
+\title{Writes a parquet file from a duckdb table}
 \usage{
 write_duckdb_parquet(
   table,
@@ -15,23 +15,23 @@ write_duckdb_parquet(
 )
 }
 \arguments{
-\item{table}{table duckdb}
+\item{table}{duckdb table}
 
-\item{path}{nom du fichier ou répertoire si partition est renseigné, par défaut le nom de la table}
+\item{path}{file name or directory if partition is specified, defaults to the table name}
 
-\item{dir}{répertoire de sortie, éventuellement s3}
+\item{dir}{output directory, optionally an S3 path}
 
-\item{compression_level, }{entre 1 et 22, 3 par défaut}
+\item{compression_level, }{between 1 and 22, default 3}
 
-\item{partition}{chaine de la forme "var1, var2" pour créer une partition, pas de partition par défaut}
+\item{partition}{string of the form "var1, var2" to create a partition, no partition by default}
 
-\item{keep}{Si TRUE, renvoit la table fournie en entrée sinon la table liée au fichier parquet créé. FALSE par défaut.}
+\item{keep}{If TRUE, returns the input table, otherwise returns the table linked to the created parquet file. Defaults to FALSE.}
 
-\item{verbose}{indique la requete SQL générée}
+\item{verbose}{prints the generated SQL query}
 }
 \value{
-table dplyr liée au fichier parquet créé (voir paramètre 'keep' pour conserver la table en entrée)
+dplyr table linked to the created parquet file (see 'keep' parameter to retain the input table)
 }
 \description{
-Écrit un fichier parquet depuis une table duckdb
+Writes a parquet file from a duckdb table
 }

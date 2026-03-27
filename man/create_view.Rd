@@ -2,18 +2,18 @@
 % Please edit documentation in R/duckdb.R
 \name{create_view}
 \alias{create_view}
-\title{Génère une vue SQL à partir d'une table dbplyr}
+\title{Generates a SQL view from a dbplyr table}
 \usage{
 create_view(table, view_name = NULL)
 }
 \arguments{
-\item{table}{Table duckdb/dbplyr}
+\item{table}{duckdb/dbplyr table}
 
-\item{view_name}{Nom de la vue, si NULL, un nom aléatoire est généré}
+\item{view_name}{Name of the view; if NULL, a random name is generated}
 }
 \value{
-Table correspondant à la vue
+Table corresponding to the view
 }
 \description{
-Génère une vue SQL à partir d'une table dbplyr
+Generates a SQL view from a dbplyr table
 }
