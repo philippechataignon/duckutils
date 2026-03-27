@@ -9,7 +9,7 @@ write_df_parquet(df, conn, path, dir = NULL, keep = FALSE)
 \arguments{
 \item{df}{data.frame}
 
-\item{conn}{duckdb connection, e.g. db\$conn}
+\item{conn}{duckdb connection, e.g. db$conn}
 
 \item{path}{file name, defaults to the table name with .parquet extension}
 

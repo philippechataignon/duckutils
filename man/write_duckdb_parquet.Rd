@@ -21,7 +21,7 @@ write_duckdb_parquet(
 
 \item{dir}{output directory, optionally an S3 path}
 
-\item{compression_level, }{between 1 and 22, default 3}
+\item{compression_level}{between 1 and 22, default 3}
 
 \item{partition}{string of the form "var1, var2" to create a partition, no partition by default}
 

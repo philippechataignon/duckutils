@@ -14,7 +14,7 @@ write_duckdb_parquet_sql(
 )
 }
 \arguments{
-\item{conn}{duckdb connection, e.g. db\$conn}
+\item{conn}{duckdb connection, e.g. db$conn}
 
 \item{query}{duckdb query}
 
@@ -22,7 +22,7 @@ write_duckdb_parquet_sql(
 
 \item{partition}{string of the form "var1, var2" to create a partition, no partition by default}
 
-\item{compression_level, }{between 1 and 22, default 3}
+\item{compression_level}{between 1 and 22, default 3}
 
 \item{verbose}{prints the generated SQL query}
 }
