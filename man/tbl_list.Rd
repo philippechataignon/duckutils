@@ -2,20 +2,20 @@
 % Please edit documentation in R/duckdb.R
 \name{tbl_list}
 \alias{tbl_list}
-\title{Renvoit une liste de tables duckdb depuis une liste
-de chemins vers des fichiers/répertoires parquet}
+\title{Returns a list of duckdb tables from a list
+of paths to parquet files/directories}
 \usage{
 tbl_list(conn, paths, level = 0, lower = FALSE, verbose = FALSE)
 }
 \arguments{
-\item{conn}{Connexion duckdb}
+\item{conn}{duckdb connection}
 
-\item{liste}{Liste de chemins vers les fichiers 'parquet'}
+\item{liste}{List of paths to 'parquet' files}
 }
 \value{
-liste Liste de tables duckdb
+liste List of duckdb tables
 }
 \description{
-Renvoit une liste de tables duckdb depuis une liste
-de chemins vers des fichiers/répertoires parquet
+Returns a list of duckdb tables from a list
+of paths to parquet files/directories
 }

@@ -1,9 +1,9 @@
-#' Attache une base Postgres à duckdb
-#' @param conn connexion duckdb, peut être obtenu par la fonction get_conn
-#' @param param liste de paramètres
-#' @param db nom de l'alias de la base
-#' @param schema nom du schema Postgres, 'public' par défaut
-#' @return Code retour dbExecute
+#' Attaches a Postgres database to duckdb
+#' @param conn duckdb connection, can be obtained via the get_conn function
+#' @param param list of parameters
+#' @param db alias name for the database
+#' @param schema Postgres schema name, defaults to 'public'
+#' @return dbExecute return code
 #' @export
 pg_attach <- function(conn, param, db = "pg", schema = "public") {
   conn_str = glue::glue("

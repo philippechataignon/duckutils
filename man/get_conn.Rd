@@ -2,21 +2,21 @@
 % Please edit documentation in R/duckdb.R
 \name{get_conn}
 \alias{get_conn}
-\title{Renvoie une connexion duckdb}
+\title{Returns a duckdb connection}
 \usage{
 get_conn(dbdir = ":memory:", ext = "none", macro = TRUE, new = NULL, ...)
 }
 \arguments{
-\item{dbdir}{Chemin vers le fichier duckdb, par défaut base stockée en mémoire}
+\item{dbdir}{Path to the duckdb file, default is an in-memory database}
 
-\item{ext}{Indique les extensions chargées. 'core': spatial, 'geo' h3 et spatial,
-'none' = pas d'extension. 'none' par défaut}
+\item{ext}{Specifies loaded extensions. 'core': spatial, 'geo': h3 and spatial,
+'none': no extension. Defaults to 'none'}
 
-\item{macro}{Si TRUE, par défaut, les macros usuelles de la fonction add_macros sont chargées}
+\item{macro}{If TRUE (default), standard macros from the add_macros function are loaded}
 
-\item{new}{Obsolète, non pris en compte, présent pour raison de compatibilité
-avec d'anciens programmes}
+\item{new}{Deprecated, not used, present for backward compatibility
+with older programs}
 }
 \description{
-Renvoie une connexion duckdb
+Returns a duckdb connection
 }

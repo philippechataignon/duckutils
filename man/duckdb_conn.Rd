@@ -30,15 +30,15 @@ db$disconnect()
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{ext}}{Extensions chargées}
+\item{\code{ext}}{Loaded extensions}
 
-\item{\code{dbdir}}{Nom de la base duckdb}
+\item{\code{dbdir}}{Name of the duckdb database}
 
-\item{\code{geometry}}{Nom de la géométrie, 'wk' (défaut) ou 'blob'}
+\item{\code{geometry}}{Geometry format name, 'wk' (default) or 'blob'}
 
-\item{\code{bigint}}{Conversion des bigint, 'integer64' (défaut) ou 'numeric'}
+\item{\code{bigint}}{bigint conversion type, 'integer64' (default) or 'numeric'}
 
-\item{\code{conn}}{Connexion duckdb}
+\item{\code{conn}}{duckdb connection}
 }
 \if{html}{\out{</div>}}
 }
@@ -58,7 +58,7 @@ db$disconnect()
 \if{html}{\out{<a id="method-duckdb_conn-new"></a>}}
 \if{latex}{\out{\hypertarget{method-duckdb_conn-new}{}}}
 \subsection{Method \code{new()}}{
-Crée un objet 'duckdb_conn'
+Creates a 'duckdb_conn' object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{duckdb_conn$new(
   ext = "none",
@@ -71,26 +71,26 @@ Crée un objet 'duckdb_conn'
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{ext}}{Extensions chargées 'core': httpfs+spatial, 'geo' core+h3
-'all' geo+ead_stat. 'none' par défaut}
+\item{\code{ext}}{Loaded extensions: 'core': httpfs+spatial, 'geo': core+h3,
+'all': geo+ead_stat. Defaults to 'none'}
 
-\item{\code{dbdir}}{Nom du la base duckdb, par défaut base stockée en mémoire}
+\item{\code{dbdir}}{Name of the duckdb database, default is an in-memory database}
 
-\item{\code{geometry}}{Nom de la géométrie, 'wk' (défaut) ou 'blob'}
+\item{\code{geometry}}{Geometry format name, 'wk' (default) or 'blob'}
 
-\item{\code{bigint}}{Conversion des bigint, 'integer64' (défaut) ou 'numeric'}
+\item{\code{bigint}}{bigint conversion type, 'integer64' (default) or 'numeric'}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-Un objet 'duckdb_conn'
+A 'duckdb_conn' object
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-duckdb_conn-print"></a>}}
 \if{latex}{\out{\hypertarget{method-duckdb_conn-print}{}}}
 \subsection{Method \code{print()}}{
-Fonction 'print' dédiée
+Dedicated 'print' function
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{duckdb_conn$print(...)}\if{html}{\out{</div>}}
 }
@@ -98,7 +98,7 @@ Fonction 'print' dédiée
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{Inutilisé}
+\item{\code{...}}{Unused}
 }
 \if{html}{\out{</div>}}
 }
@@ -107,7 +107,7 @@ Fonction 'print' dédiée
 \if{html}{\out{<a id="method-duckdb_conn-is_connected"></a>}}
 \if{latex}{\out{\hypertarget{method-duckdb_conn-is_connected}{}}}
 \subsection{Method \code{is_connected()}}{
-Connexion valide ?
+Is the connection valid?
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{duckdb_conn$is_connected()}\if{html}{\out{</div>}}
 }
@@ -120,8 +120,8 @@ TRUE/FALSE
 \if{html}{\out{<a id="method-duckdb_conn-renew"></a>}}
 \if{latex}{\out{\hypertarget{method-duckdb_conn-renew}{}}}
 \subsection{Method \code{renew()}}{
-Renouvelle la connexion sans changer de duckdb_conn
-Attention: toutes les tables en mémoire sont perdues
+Renews the connection without changing the duckdb_conn object.
+Warning: all in-memory tables are lost
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{duckdb_conn$renew()}\if{html}{\out{</div>}}
 }
@@ -131,7 +131,7 @@ Attention: toutes les tables en mémoire sont perdues
 \if{html}{\out{<a id="method-duckdb_conn-refresh"></a>}}
 \if{latex}{\out{\hypertarget{method-duckdb_conn-refresh}{}}}
 \subsection{Method \code{refresh()}}{
-Rafraichit les identifiants de connexion S3
+Refreshes the S3 connection credentials
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{duckdb_conn$refresh()}\if{html}{\out{</div>}}
 }
@@ -141,9 +141,9 @@ Rafraichit les identifiants de connexion S3
 \if{html}{\out{<a id="method-duckdb_conn-disconnect"></a>}}
 \if{latex}{\out{\hypertarget{method-duckdb_conn-disconnect}{}}}
 \subsection{Method \code{disconnect()}}{
-Déconnecte la connexion courante. Une nouvelle connexion sera créée
-au prochain appel de '$conn'
-Attention: toutes les tables en mémoire sont perdues
+Disconnects the current connection. A new connection will be created
+on the next call to '$conn'.
+Warning: all in-memory tables are lost
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{duckdb_conn$disconnect()}\if{html}{\out{</div>}}
 }

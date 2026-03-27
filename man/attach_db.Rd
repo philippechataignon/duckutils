@@ -2,22 +2,22 @@
 % Please edit documentation in R/duckdb.R
 \name{attach_db}
 \alias{attach_db}
-\title{Attach une base duckdb à une connexion}
+\title{Attaches a duckdb database to a connection}
 \usage{
 attach_db(conn, dbdir, db, crypt = FALSE)
 }
 \arguments{
-\item{conn}{Connexion duckdb, peut être obtenu par la fonction get_conn}
+\item{conn}{duckdb connection, can be obtained via the get_conn function}
 
-\item{dbdir}{Chemin vers le fichier duckdb}
+\item{dbdir}{Path to the duckdb file}
 
-\item{db}{Nom de l'alias de la base}
+\item{db}{Alias name for the database}
 
-\item{crypt}{Si TRUE, passe la valeur de DUCKDB_ENCRYPTION_KEY comme clé de la base cryptée}
+\item{crypt}{If TRUE, passes the value of DUCKDB_ENCRYPTION_KEY as the key for the encrypted database}
 }
 \value{
-Nom de la base duckdb
+Name of the duckdb database
 }
 \description{
-Attach une base duckdb à une connexion
+Attaches a duckdb database to a connection
 }

@@ -1,12 +1,12 @@
 extlist = c("none", "core", "geo", "stat", "all")
 
-#' Renvoie une connexion duckdb
-#' @param dbdir Chemin vers le fichier duckdb, par défaut base stockée en mémoire
-#' @param ext Indique les extensions chargées. 'core': spatial, 'geo' h3 et spatial,
-#' 'none' = pas d'extension. 'none' par défaut
-#' @param macro Si TRUE, par défaut, les macros usuelles de la fonction add_macros sont chargées
-#' @param new Obsolète, non pris en compte, présent pour raison de compatibilité
-#' avec d'anciens programmes
+#' Returns a duckdb connection
+#' @param dbdir Path to the duckdb file, default is an in-memory database
+#' @param ext Specifies loaded extensions. 'core': spatial, 'geo': h3 and spatial,
+#' 'none': no extension. Defaults to 'none'
+#' @param macro If TRUE (default), standard macros from the add_macros function are loaded
+#' @param new Deprecated, not used, present for backward compatibility
+#' with older programs
 #' @export
 get_conn <- function(dbdir = ":memory:", ext = "none", macro=TRUE, new = NULL, ...)
 {
@@ -30,16 +30,15 @@ get_conn <- function(dbdir = ":memory:", ext = "none", macro=TRUE, new = NULL, .
   invisible(conn)
 }
 
-#' Renvoit une table duckdb depuis un fichier parquet y.c S3
-#' @param conn Connexion duckdb
-#' @param path Chemin de la table/répertoire parquet
-#' @param level Nombre de niveaux dans le cas de fichiers parquet partitionnés,
-#' par défaut 0 si pas de partionnement
-#' @param lower Si TRUE, les variables sont converties en minuscules
-#' @return Liste de tables duckdb
+#' Returns a duckdb table from a parquet file including S3
+#' @param conn duckdb connection
+#' @param path Path to the parquet table/directory
+#' @param level Number of levels for partitioned parquet files, default 0 if not partitioned
+#' @param lower If TRUE, variable names are converted to lowercase
+#' @return List of duckdb tables
 #' @export
 tbl_pqt <- function(conn, path, level = 0, lower = FALSE, verbose = FALSE) {
-  # si les paths se terminent par un /, alors on ajoute *.parquet
+  # if paths end with /, append *.parquet
   if (
     level > 0 ||
       (level == 0 && all(substr(path, nchar(path), nchar(path)) == "/"))
@@ -61,12 +60,12 @@ tbl_pqt <- function(conn, path, level = 0, lower = FALSE, verbose = FALSE) {
   }
   table
 }
-#' Renvoit une table duckdb depuis un fichier csv y.c S3
-#' @param conn Connexion duckdb
-#' @param path Chemin du fichier csv
-#' @param ...  Options à passer à la fonction read_csv du duckdb
-#' @param lower Si TRUE, les variables sont converties en minuscules
-#' @return Table duckdb
+#' Returns a duckdb table from a CSV file including S3
+#' @param conn duckdb connection
+#' @param path Path to the CSV file
+#' @param ...  Options to pass to the duckdb read_csv function
+#' @param lower If TRUE, variable names are converted to lowercase
+#' @return duckdb table
 #' @export
 tbl_csv <- function(conn, path, ..., lower = FALSE, verbose = FALSE) {
   opt = list(...)
@@ -88,11 +87,11 @@ tbl_csv <- function(conn, path, ..., lower = FALSE, verbose = FALSE) {
   table
 }
 
-#' Renvoit une liste de tables duckdb depuis une liste
-#' de chemins vers des fichiers/répertoires parquet
-#' @param conn Connexion duckdb
-#' @param liste Liste de chemins vers les fichiers 'parquet'
-#' @return liste Liste de tables duckdb
+#' Returns a list of duckdb tables from a list
+#' of paths to parquet files/directories
+#' @param conn duckdb connection
+#' @param liste List of paths to 'parquet' files
+#' @return liste List of duckdb tables
 #' @export
 tbl_list <- function(conn, paths, level = 0, lower = FALSE, verbose = FALSE) {
   lapply(
@@ -103,9 +102,9 @@ tbl_list <- function(conn, paths, level = 0, lower = FALSE, verbose = FALSE) {
   )
 }
 
-#' Crée un secret à partir des variables env S3
-#' @param conn Connexion duckdb
-#' @return Code retour duckdb
+#' Creates a secret from S3 environment variables
+#' @param conn duckdb connection
+#' @return duckdb return code
 #' @export
 refresh_secret <- function(conn) {
   DBI::dbExecute(
@@ -133,12 +132,12 @@ refresh_secret <- function(conn) {
   )
 }
 
-#' Attach une base duckdb à une connexion
-#' @param conn Connexion duckdb, peut être obtenu par la fonction get_conn
-#' @param dbdir Chemin vers le fichier duckdb
-#' @param db Nom de l'alias de la base
-#' @param crypt Si TRUE, passe la valeur de DUCKDB_ENCRYPTION_KEY comme clé de la base cryptée
-#' @return Nom de la base duckdb
+#' Attaches a duckdb database to a connection
+#' @param conn duckdb connection, can be obtained via the get_conn function
+#' @param dbdir Path to the duckdb file
+#' @param db Alias name for the database
+#' @param crypt If TRUE, passes the value of DUCKDB_ENCRYPTION_KEY as the key for the encrypted database
+#' @return Name of the duckdb database
 #' @export
 attach_db <- function(conn, dbdir, db, crypt=FALSE) {
   DBI::dbExecute(conn, paste("DETACH DATABASE IF EXISTS", db))
@@ -155,10 +154,10 @@ attach_db <- function(conn, dbdir, db, crypt=FALSE) {
   invisible(db)
 }
 
-#' Renvoie une liste de tables depuis une database duckdb
-#' @param conn Connexion duckdb, peut être obtenu par la fonction get_conn
-#' @param db Nom de la database duckdb
-#' @return Liste de tables
+#' Returns a list of tables from a duckdb database
+#' @param conn duckdb connection, can be obtained via the get_conn function
+#' @param db Name of the duckdb database
+#' @return List of tables
 #' @export
 tbl_db <- function(conn, db, verbose=FALSE) {
   tables = dbGetQuery(conn, paste("SHOW TABLES FROM", db))$name
@@ -168,13 +167,13 @@ tbl_db <- function(conn, db, verbose=FALSE) {
   lapplyn(tables, function(x) dplyr::tbl(conn, paste0(db, ".", x)))
 }
 
-#' Renvoie une liste de tables depuis une base duckdb
-#' @param conn Connexion duckdb, peut être obtenu par la fonction get_conn
-#' @param name Nom de la base duckdb, ".duckdb" est ajouté automatiquement et la base est dans le répertoire
-#'        (s3perso)/duckdb
-#' @param db Nom de l'alias de la base, par défaut path
-#' @param crypt Si TRUE, passe la valeur de DUCKDB_ENCRYPTION_KEY comme clé de la base cryptée
-#' @return Liste de tables
+#' Returns a list of tables from a duckdb database
+#' @param conn duckdb connection, can be obtained via the get_conn function
+#' @param name Name of the duckdb database; ".duckdb" is appended automatically and the database is located in the
+#'        (s3perso)/duckdb directory
+#' @param db Alias name for the database, defaults to path
+#' @param crypt If TRUE, passes the value of DUCKDB_ENCRYPTION_KEY as the key for the encrypted database
+#' @return List of tables
 #' @export
 tbl_duckdb <- function(conn, name, db=NULL, crypt=FALSE) {
   if (is.null(db)) {
@@ -237,11 +236,10 @@ as_bool <- function(x) {
   substitute(try_cast(dbplyr::sql(inner)))
 }
 
-#' Génère une requête SQL pour générer un cube duckdb
-#' @param table Table duckdb/dbplyr
-#' @param dims  Vecteur caractère des dimensions
-#' @param aggr  Description des calculs des mesures du cube
-#' dans une chaîne caractère
+#' Generates a SQL query to create a duckdb cube
+#' @param table duckdb/dbplyr table
+#' @param dims  Character vector of dimensions
+#' @param aggr  Description of cube measure calculations as a character string
 #' @examples
 #' table |>
 #'  compute() |>
@@ -273,10 +271,10 @@ create_cube <- function(table, dims, aggr) {
   )
 }
 
-#' Génère une vue SQL à partir d'une table dbplyr
-#' @param table Table duckdb/dbplyr
-#' @param view_name Nom de la vue, si NULL, un nom aléatoire est généré
-#' @return Table correspondant à la vue
+#' Generates a SQL view from a dbplyr table
+#' @param table duckdb/dbplyr table
+#' @param view_name Name of the view; if NULL, a random name is generated
+#' @return Table corresponding to the view
 #' @export
 create_view <- function(table, view_name=NULL) {
   if (is.null(view_name)) {

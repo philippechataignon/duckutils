@@ -2,7 +2,7 @@
 % Please edit documentation in R/write_duckdb_parquet.R
 \name{write_duckdb_parquet_sql}
 \alias{write_duckdb_parquet_sql}
-\title{Écrit un fichier parquet depuis une requête duckdb}
+\title{Writes a parquet file from a duckdb query}
 \usage{
 write_duckdb_parquet_sql(
   conn,
@@ -14,21 +14,21 @@ write_duckdb_parquet_sql(
 )
 }
 \arguments{
-\item{conn}{Connexion duckdb, par exemple db$conn}
+\item{conn}{duckdb connection, e.g. db\$conn}
 
-\item{query}{Requête duckdb}
+\item{query}{duckdb query}
 
-\item{path}{nom du fichier ou répertoire si partition est renseigné}
+\item{path}{file name or directory if partition is specified}
 
-\item{partition}{chaine de la forme "var1, var2" pour créer une partition, pas de partition par défaut}
+\item{partition}{string of the form "var1, var2" to create a partition, no partition by default}
 
-\item{compression_level, }{entre 1 et 22, 3 par défaut}
+\item{compression_level, }{between 1 and 22, default 3}
 
-\item{verbose}{indique la requete SQL générée}
+\item{verbose}{prints the generated SQL query}
 }
 \value{
-Chemin du fichier parquet créé
+Path of the created parquet file
 }
 \description{
-Écrit un fichier parquet depuis une requête duckdb
+Writes a parquet file from a duckdb query
 }

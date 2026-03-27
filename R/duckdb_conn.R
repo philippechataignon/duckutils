@@ -26,13 +26,13 @@ duckdb_conn <- R6Class(
   "duckdb_conn",
   public = list(
     #' @description
-    #' Crée un objet 'duckdb_conn'
-    #' @param ext Extensions chargées 'core': httpfs+spatial, 'geo' core+h3
-    #' 'all' geo+ead_stat. 'none' par défaut
-    #' @param dbdir Nom du la base duckdb, par défaut base stockée en mémoire
-    #' @param geometry Nom de la géométrie, 'wk' (défaut) ou 'blob'
-    #' @param bigint Conversion des bigint, 'integer64' (défaut) ou 'numeric'
-    #' @return Un objet 'duckdb_conn'
+    #' Creates a 'duckdb_conn' object
+    #' @param ext Loaded extensions: 'core': httpfs+spatial, 'geo': core+h3,
+    #' 'all': geo+ead_stat. Defaults to 'none'
+    #' @param dbdir Name of the duckdb database, default is an in-memory database
+    #' @param geometry Geometry format name, 'wk' (default) or 'blob'
+    #' @param bigint bigint conversion type, 'integer64' (default) or 'numeric'
+    #' @return A 'duckdb_conn' object
     initialize = function(
         ext = "none",
         dbdir = ":memory:",
@@ -50,8 +50,8 @@ duckdb_conn <- R6Class(
       private$pbigint <- bigint
     },
     #' @description
-    #' Fonction 'print' dédiée
-    #' @param ... Inutilisé
+    #' Dedicated 'print' function
+    #' @param ... Unused
     print = function(...) {
       message("Duckdb connection ", "ext:", private$pext, " dbdir:", private$pdbdir)
       if (self$is_connected())
@@ -61,7 +61,7 @@ duckdb_conn <- R6Class(
       invisible(self)
     },
     #' @description
-    #' Connexion valide ?
+    #' Is the connection valid?
     #' @return TRUE/FALSE
     is_connected = function() {
       if (is.null(private$pconn)) {
@@ -72,8 +72,8 @@ duckdb_conn <- R6Class(
       ret
     },
     #' @description
-    #' Renouvelle la connexion sans changer de duckdb_conn
-    #' Attention: toutes les tables en mémoire sont perdues
+    #' Renews the connection without changing the duckdb_conn object.
+    #' Warning: all in-memory tables are lost
     renew = function() {
       self$disconnect()
       private$pconn = get_conn(
@@ -85,7 +85,7 @@ duckdb_conn <- R6Class(
       invisible(self)
     },
     #' @description
-    #' Rafraichit les identifiants de connexion S3
+    #' Refreshes the S3 connection credentials
     refresh = function() {
       if (self$is_connected()) {
         refresh_secret(private$pconn)
@@ -93,9 +93,9 @@ duckdb_conn <- R6Class(
       invisible(self)
     },
     #' @description
-    #' Déconnecte la connexion courante. Une nouvelle connexion sera créée
-    #' au prochain appel de '$conn'
-    #' Attention: toutes les tables en mémoire sont perdues
+    #' Disconnects the current connection. A new connection will be created
+    #' on the next call to '$conn'.
+    #' Warning: all in-memory tables are lost
     disconnect = function() {
       if (self$is_connected()) {
         tryCatch(
@@ -117,35 +117,35 @@ duckdb_conn <- R6Class(
     }
   ),
   active = list(
-    #' @field ext Extensions chargées
+    #' @field ext Loaded extensions
     ext = function(value) {
       if (!missing(value)) {
         stop("ext can't be modified. Use duckdb_conn$new(ext=...)")
       }
       private$pext
     },
-    #' @field dbdir Nom de la base duckdb
+    #' @field dbdir Name of the duckdb database
     dbdir = function(value) {
       if (!missing(value)) {
         stop("dbdir can't be modified. Use duckdb_conn$new(dbdir=...)")
       }
       private$pdbdir
     },
-    #' @field geometry Nom de la géométrie, 'wk' (défaut) ou 'blob'
+    #' @field geometry Geometry format name, 'wk' (default) or 'blob'
     geometry = function(value) {
       if (!missing(value)) {
         stop("geometry can't be modified. Use duckdb_conn$new(geometry=...)")
       }
       private$pgeometry
     },
-    #' @field bigint Conversion des bigint, 'integer64' (défaut) ou 'numeric'
+    #' @field bigint bigint conversion type, 'integer64' (default) or 'numeric'
     bigint = function(value) {
       if (!missing(value)) {
         stop("bigint can't be modified. Use duckdb_conn$new(bigint=...)")
       }
       private$pbigint
     },
-    #' @field conn Connexion duckdb
+    #' @field conn duckdb connection
     conn = function() {
       if (!self$is_connected()) {
         self$renew()

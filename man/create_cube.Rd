@@ -2,20 +2,19 @@
 % Please edit documentation in R/duckdb.R
 \name{create_cube}
 \alias{create_cube}
-\title{Génère une requête SQL pour générer un cube duckdb}
+\title{Generates a SQL query to create a duckdb cube}
 \usage{
 create_cube(table, dims, aggr)
 }
 \arguments{
-\item{table}{Table duckdb/dbplyr}
+\item{table}{duckdb/dbplyr table}
 
-\item{dims}{Vecteur caractère des dimensions}
+\item{dims}{Character vector of dimensions}
 
-\item{aggr}{Description des calculs des mesures du cube
-dans une chaîne caractère}
+\item{aggr}{Description of cube measure calculations as a character string}
 }
 \description{
-Génère une requête SQL pour générer un cube duckdb
+Generates a SQL query to create a duckdb cube
 }
 \examples{
 table |>
