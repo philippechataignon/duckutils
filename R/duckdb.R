@@ -1,0 +1,297 @@
+extlist = c("none", "core", "geo", "stat", "all")
+
+#' Renvoie une connexion duckdb
+#' @param dbdir Chemin vers le fichier duckdb, par défaut base stockée en mémoire
+#' @param ext Indique les extensions chargées. 'core': spatial, 'geo' h3 et spatial,
+#' 'none' = pas d'extension. 'none' par défaut
+#' @param macro Si TRUE, par défaut, les macros usuelles de la fonction add_macros sont chargées
+#' @param new Obsolète, non pris en compte, présent pour raison de compatibilité
+#' avec d'anciens programmes
+#' @export
+get_conn <- function(dbdir = ":memory:", ext = "none", macro=TRUE, new = NULL, ...)
+{
+  if (!missing(new)) {
+    warning("La paramètre 'new' est renseigné mais n'est pas pris en compte. ",
+            "Il peut être supprimé : ",
+            "get_conn renvoit une nouvelle connexion à chaque appel")
+  }
+  ext = match.arg(ext, extlist)
+  conn = DBI::dbConnect(
+    duckdb::duckdb(),
+    dbdir = dbdir,
+    ...
+  )
+  if (ext %in% c("geo")) {
+    DBI::dbExecute(
+      conn, "
+      LOAD spatial;
+    ")
+  }
+  invisible(conn)
+}
+
+#' Renvoit une table duckdb depuis un fichier parquet y.c S3
+#' @param conn Connexion duckdb
+#' @param path Chemin de la table/répertoire parquet
+#' @param level Nombre de niveaux dans le cas de fichiers parquet partitionnés,
+#' par défaut 0 si pas de partionnement
+#' @param lower Si TRUE, les variables sont converties en minuscules
+#' @return Liste de tables duckdb
+#' @export
+tbl_pqt <- function(conn, path, level = 0, lower = FALSE, verbose = FALSE) {
+  # si les paths se terminent par un /, alors on ajoute *.parquet
+  if (
+    level > 0 ||
+      (level == 0 && all(substr(path, nchar(path), nchar(path)) == "/"))
+  ) {
+    niv <- paste0(rep('/*', level + 1), collapse = "")
+    path <- paste0(path, niv)
+  }
+  cmd <- paste0(
+    "read_parquet([",
+    paste(paste0("'", path, "'"), collapse = ","),
+    "], hive_partitioning = true, hive_types_autocast = 0)"
+  )
+  if (verbose) {
+    cat(cmd, "\n")
+  }
+  table <- dplyr::tbl(conn, cmd)
+  if (lower) {
+    table <- dplyr::rename_with(table, tolower)
+  }
+  table
+}
+#' Renvoit une table duckdb depuis un fichier csv y.c S3
+#' @param conn Connexion duckdb
+#' @param path Chemin du fichier csv
+#' @param ...  Options à passer à la fonction read_csv du duckdb
+#' @param lower Si TRUE, les variables sont converties en minuscules
+#' @return Table duckdb
+#' @export
+tbl_csv <- function(conn, path, ..., lower = FALSE, verbose = FALSE) {
+  opt = list(...)
+  if (length(opt) == 0)
+    cmd <- paste0("read_csv('", path, "')")
+  else {
+    opt = lapply(opt, \(x) {if(is.character(x)) paste0("'", x, "'") else x})
+    opt = lapply(names(opt), \(n) paste0(n, " = ", opt[[n]]))
+    opt = paste(opt, collapse = ",")
+    cmd <- paste0("read_csv('", path, "', ", opt, ")")
+  }
+  if (verbose) {
+    cat(cmd, "\n")
+  }
+  table <- dplyr::tbl(conn, cmd)
+  if (lower) {
+    table <- dplyr::rename_with(table, tolower)
+  }
+  table
+}
+
+#' Renvoit une liste de tables duckdb depuis une liste
+#' de chemins vers des fichiers/répertoires parquet
+#' @param conn Connexion duckdb
+#' @param liste Liste de chemins vers les fichiers 'parquet'
+#' @return liste Liste de tables duckdb
+#' @export
+tbl_list <- function(conn, paths, level = 0, lower = FALSE, verbose = FALSE) {
+  lapply(
+    paths,
+    function(x) {
+      tbl_pqt(conn, x, level, lower, verbose)
+    }
+  )
+}
+
+#' Crée un secret à partir des variables env S3
+#' @param conn Connexion duckdb
+#' @return Code retour duckdb
+#' @export
+refresh_secret <- function(conn) {
+  DBI::dbExecute(
+    conn,
+    paste0(
+      "CREATE OR REPLACE SECRET secret (
+        TYPE s3,
+        PROVIDER config,
+        URL_STYLE 'path',
+        REGION 'us-east-1',",
+      "ENDPOINT '",
+      Sys.getenv("AWS_S3_ENDPOINT"),
+      "',",
+      "KEY_ID '",
+      Sys.getenv("AWS_ACCESS_KEY_ID"),
+      "',",
+      "SECRET '",
+      Sys.getenv("AWS_SECRET_ACCESS_KEY"),
+      "',",
+      "SESSION_TOKEN '",
+      Sys.getenv("AWS_SESSION_TOKEN"),
+      "'
+      )"
+    )
+  )
+}
+
+#' Attach une base duckdb à une connexion
+#' @param conn Connexion duckdb, peut être obtenu par la fonction get_conn
+#' @param dbdir Chemin vers le fichier duckdb
+#' @param db Nom de l'alias de la base
+#' @param crypt Si TRUE, passe la valeur de DUCKDB_ENCRYPTION_KEY comme clé de la base cryptée
+#' @return Nom de la base duckdb
+#' @export
+attach_db <- function(conn, dbdir, db, crypt=FALSE) {
+  DBI::dbExecute(conn, paste("DETACH DATABASE IF EXISTS", db))
+  cmd = paste0("ATTACH '", dbdir, "' as ", db)
+  if (crypt) {
+    cmd = paste0(
+      cmd,
+      "(encryption_key '",
+      Sys.getenv("DUCKDB_ENCRYPTION_KEY"),
+      "')"
+    )
+  }
+  DBI::dbExecute(conn, cmd)
+  invisible(db)
+}
+
+#' Renvoie une liste de tables depuis une database duckdb
+#' @param conn Connexion duckdb, peut être obtenu par la fonction get_conn
+#' @param db Nom de la database duckdb
+#' @return Liste de tables
+#' @export
+tbl_db <- function(conn, db, verbose=FALSE) {
+  tables = dbGetQuery(conn, paste("SHOW TABLES FROM", db))$name
+  if (verbose) {
+    print(tables)
+  }
+  lapplyn(tables, function(x) dplyr::tbl(conn, paste0(db, ".", x)))
+}
+
+#' Renvoie une liste de tables depuis une base duckdb
+#' @param conn Connexion duckdb, peut être obtenu par la fonction get_conn
+#' @param name Nom de la base duckdb, ".duckdb" est ajouté automatiquement et la base est dans le répertoire
+#'        (s3perso)/duckdb
+#' @param db Nom de l'alias de la base, par défaut path
+#' @param crypt Si TRUE, passe la valeur de DUCKDB_ENCRYPTION_KEY comme clé de la base cryptée
+#' @return Liste de tables
+#' @export
+tbl_duckdb <- function(conn, name, db=NULL, crypt=FALSE) {
+  if (is.null(db)) {
+    db = name
+  }
+  if (grepl("crypt", name, fixed=TRUE)) {
+    crypt = TRUE
+  }
+  db = attach_db(conn, dbdir = perso("duckdb", paste0(name, ".duckdb")), db, crypt=crypt)
+  tbl_db(conn, db)
+}
+
+#' Wrapper try_cast duckdb
+#' @examples
+#' p90 |>
+#'  mutate(
+#'    across(
+#'      starts_with(c("N")),
+#'      ~ !!as.int
+#'    )
+#'  )
+#' @export
+as.int =  quote(try_cast(dbplyr::sql(paste0('"', cur_column(), '" as integer'))))
+
+#' Wrapper try_cast duckdb
+#' @export
+#' @examples
+#' p90 |>
+#'  mutate(
+#'    across(
+#'      starts_with(c("I")),
+#'      ~ !!as.bool
+#'    )
+#'  )
+as.bool =  quote(try_cast(dbplyr::sql(paste0('"', cur_column(), '" as boolean'))))
+
+#' Wrapper try_cast duckdb
+#' @examples
+#' p90 |>
+#'   transmute(
+#'     nb = !!as_int(nb),
+#'   )
+#' @export
+as_int <- function(x) {
+  nom = deparse(substitute(x))
+  inner = paste0('"', nom, '" as integer')
+  substitute(try_cast(dbplyr::sql(inner)))
+}
+
+#' Wrapper try_cast duckdb
+#' @examples
+#' p90 |>
+#'   transmute(
+#'     INP75M = !!as_bool(is_present)
+#'   )
+#' @export
+as_bool <- function(x) {
+  nom = deparse(substitute(x))
+  inner = paste0('"', nom, '" as boolean')
+  substitute(try_cast(dbplyr::sql(inner)))
+}
+
+#' Génère une requête SQL pour générer un cube duckdb
+#' @param table Table duckdb/dbplyr
+#' @param dims  Vecteur caractère des dimensions
+#' @param aggr  Description des calculs des mesures du cube
+#' dans une chaîne caractère
+#' @examples
+#' table |>
+#'  compute() |>
+#'  create_cube(
+#'    dims = c("dim1", "dim2"),
+#'    aggr =
+#'    "round(sum(n))::integer as eff,
+#'     round(sum(n * is_present::int))::integer as eff_present"
+#'  ) |>
+#'  mutate(
+#'    tx_present = round(eff_present / eff * 100, 2)
+#'  ) -> tbl_cube
+#' @export
+create_cube <- function(table, dims, aggr) {
+  temp_name = tempname(prefix = "view")
+  temp_view = create_view(table, temp_name)
+  chr_dims = paste(dims, collapse="," )
+  tbl(
+    table$src$con,
+    dbplyr::sql(glue::glue("
+    select
+      grouping_id({chr_dims}) as grouping,
+      {chr_dims},
+      {aggr}
+    from {temp_name}
+    group by cube ({chr_dims})
+    order by grouping, ({chr_dims})
+    "))
+  )
+}
+
+#' Génère une vue SQL à partir d'une table dbplyr
+#' @param table Table duckdb/dbplyr
+#' @param view_name Nom de la vue, si NULL, un nom aléatoire est généré
+#' @return Table correspondant à la vue
+#' @export
+create_view <- function(table, view_name=NULL) {
+  if (is.null(view_name)) {
+    view_name = tempname(prefix = "view")
+  }
+  DBI::dbExecute(
+    table$src$con,
+    glue::glue("DROP VIEW IF EXISTS {`view_name`}")
+  )
+  DBI::dbExecute(
+    table$src$con,
+    glue::glue(
+    "CREATE VIEW {`view_name`} AS\n",
+    "{dbplyr::sql_render(table)}\n"
+    )
+  )
+  tbl(table$src$con, view_name)
+}

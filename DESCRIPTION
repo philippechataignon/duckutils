@@ -1,0 +1,19 @@
+Package: duckutils
+Title: Utility functions for duckdb
+Version: 0.0.1
+Author: Philippe Chataignon
+Maintainer: Philippe Chataignon <philippe.chataignon@gmail.com>
+Description: Make duckdb usage more easy
+License: GPL-2
+Encoding: UTF-8
+RoxygenNote: 7.3.3
+Roxygen: list(markdown = TRUE)
+Suggests:
+  testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports:
+  DBI,
+  dbplyr,
+  dplyr,
+  duckdb,
+  glue
