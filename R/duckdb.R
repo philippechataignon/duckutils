@@ -11,9 +11,9 @@ extlist = c("none", "core", "geo", "stat", "all")
 get_conn <- function(dbdir = ":memory:", ext = "none", macro=TRUE, new = NULL, ...)
 {
   if (!missing(new)) {
-    warning("La paramètre 'new' est renseigné mais n'est pas pris en compte. ",
-            "Il peut être supprimé : ",
-            "get_conn renvoit une nouvelle connexion à chaque appel")
+    warning("The 'new' parameter is provided but not used. ",
+            "It can be removed: ",
+            "get_conn returns a new connection on each call")
   }
   ext = match.arg(ext, extlist)
   conn = DBI::dbConnect(
