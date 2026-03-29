@@ -90,7 +90,7 @@ tbl_csv <- function(conn, path, ..., lower = FALSE, verbose = FALSE) {
 #' Returns a list of duckdb tables from a list
 #' of paths to parquet files/directories
 #' @param conn duckdb connection
-#' @param liste List of paths to 'parquet' files
+#' @param paths List of paths to 'parquet' files
 #' @return liste List of duckdb tables
 #' @export
 tbl_list <- function(conn, paths, level = 0, lower = FALSE, verbose = FALSE) {
@@ -130,12 +130,13 @@ attach_db <- function(conn, dbdir, db, crypt=FALSE) {
 #' @return List of tables
 #' @export
 tbl_db <- function(conn, db, verbose=FALSE) {
-  tables = dbGetQuery(conn, paste("SHOW TABLES FROM", db))$name
+  tables = DBI::dbGetQuery(conn, paste("SHOW TABLES FROM", db))$name
   if (verbose) {
     print(tables)
   }
   ret = lapply(tables, function(x) dplyr::tbl(conn, paste0(db, ".", x)))
   names(ret) = tables
+  ret
 }
 
 #' Returns a list of tables from a duckdb database
@@ -228,7 +229,7 @@ create_cube <- function(table, dims, aggr) {
   temp_name = tempname(prefix = "view")
   temp_view = create_view(table, temp_name)
   chr_dims = paste(dims, collapse="," )
-  tbl(
+  dplyr::tbl(
     table$src$con,
     dbplyr::sql(glue::glue("
     select
@@ -262,5 +263,5 @@ create_view <- function(table, view_name=NULL) {
     "{dbplyr::sql_render(table)}\n"
     )
   )
-  tbl(table$src$con, view_name)
+  dplyr::tbl(table$src$con, view_name)
 }

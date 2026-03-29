@@ -66,7 +66,7 @@ write_duckdb_parquet <- function(
   }
   write_duckdb_parquet_sql(
     conn = table$src$con,
-    query = sql_render(table),
+    query = dbplyr::sql_render(table),
     path = path,
     compression_level = compression_level,
     partition = partition_str,
@@ -91,9 +91,9 @@ write_df_parquet <- function (df, conn, path, dir = NULL, keep = FALSE)
   name = tempname()
   if (!is.null(dir))
     path = file.path(dir, path)
-  duckdb_register(conn, name, df, overwrite = TRUE)
+  duckdb::duckdb_register(conn, name, df, overwrite = TRUE)
   outfile = write_duckdb_parquet_sql(conn, paste("FROM", name), path)
-  duckdb_unregister(conn, name)
+  duckdb::duckdb_unregister(conn, name)
   if (keep)
     df
   else
