@@ -3,7 +3,7 @@
 ## Bug Fixes
 
 * Added missing **R6** dependency to `DESCRIPTION` Imports.
-* Added missing helper functions `tempname()` and `refresh_secret()` in `R/utils.R`.
+* Added missing helper functions `tempname()` and `perso()` in `R/utils.R`.
 * Fixed `dbGetQuery` → `DBI::dbGetQuery` in `tbl_db()`.
 * Added missing `return(ret)` in `tbl_db()`.
 * Fixed `tbl()` → `dplyr::tbl()` in `create_cube()` and `create_view()`.
@@ -16,6 +16,10 @@
 
 * `pg_attach()` now accepts a `password_env` parameter (default `"PASSWORDINSEE"`)
   so users can specify their own password environment variable.
+* `get_conn()`: `macro` parameter documentation updated to reflect it is not yet
+  implemented; passing `macro = FALSE` now emits an informative warning.
+* Added input validation with informative error messages to `tbl_pqt()`,
+  `tbl_csv()`, `tbl_list()`, `write_duckdb_parquet()`, and `write_df_parquet()`.
 * Enhanced `README.md` with installation instructions, quick-start examples, and a
   full function reference table.
 * Added `NEWS.md` for version tracking.

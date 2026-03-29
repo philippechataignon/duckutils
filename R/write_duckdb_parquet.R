@@ -46,6 +46,12 @@ write_duckdb_parquet <- function(
   keep = FALSE,
   verbose = FALSE
 ) {
+  if (!inherits(table, "tbl_lazy")) {
+    stop("'table' must be a dbplyr lazy table (tbl_lazy).")
+  }
+  if (!is.null(path) && (!is.character(path) || length(path) != 1)) {
+    stop("'path' must be a single character string or NULL.")
+  }
   if (!is.null(dir)) {
     if (is.null(path)) {
       if (is.null(partition)) {
@@ -88,6 +94,15 @@ write_duckdb_parquet <- function(
 #' @export
 write_df_parquet <- function (df, conn, path, dir = NULL, keep = FALSE)
 {
+  if (!is.data.frame(df)) {
+    stop("'df' must be a data frame.")
+  }
+  if (!DBI::dbIsValid(conn)) {
+    stop("'conn' is not a valid DBI connection.")
+  }
+  if (!is.character(path) || length(path) != 1) {
+    stop("'path' must be a single character string.")
+  }
   name = tempname()
   if (!is.null(dir))
     path = file.path(dir, path)

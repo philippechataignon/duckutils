@@ -4,7 +4,7 @@ extlist = c("none", "core", "geo", "stat", "all")
 #' @param dbdir Path to the duckdb file, default is an in-memory database
 #' @param ext Specifies loaded extensions. 'core': spatial, 'geo': h3 and spatial,
 #' 'none': no extension. Defaults to 'none'
-#' @param macro If TRUE (default), standard macros from the add_macros function are loaded
+#' @param macro Not yet implemented. Reserved for future use to load standard macros.
 #' @param new Deprecated, not used, present for backward compatibility
 #' with older programs
 #' @export
@@ -14,6 +14,9 @@ get_conn <- function(dbdir = ":memory:", ext = "none", macro=TRUE, new = NULL, .
     warning("The 'new' parameter is provided but not used. ",
             "It can be removed: ",
             "get_conn returns a new connection on each call")
+  }
+  if (!isTRUE(macro)) {
+    warning("The 'macro' parameter is not yet implemented and has no effect.")
   }
   ext = match.arg(ext, extlist)
   conn = DBI::dbConnect(
@@ -38,6 +41,15 @@ get_conn <- function(dbdir = ":memory:", ext = "none", macro=TRUE, new = NULL, .
 #' @return List of duckdb tables
 #' @export
 tbl_pqt <- function(conn, path, level = 0, lower = FALSE, verbose = FALSE) {
+  if (!DBI::dbIsValid(conn)) {
+    stop("'conn' is not a valid DBI connection.")
+  }
+  if (!is.character(path) || length(path) == 0) {
+    stop("'path' must be a non-empty character vector.")
+  }
+  if (!is.numeric(level) || length(level) != 1 || level < 0) {
+    stop("'level' must be a single non-negative number.")
+  }
   # if paths end with /, append *.parquet
   if (
     level > 0 ||
@@ -68,6 +80,12 @@ tbl_pqt <- function(conn, path, level = 0, lower = FALSE, verbose = FALSE) {
 #' @return duckdb table
 #' @export
 tbl_csv <- function(conn, path, ..., lower = FALSE, verbose = FALSE) {
+  if (!DBI::dbIsValid(conn)) {
+    stop("'conn' is not a valid DBI connection.")
+  }
+  if (!is.character(path) || length(path) != 1) {
+    stop("'path' must be a single character string.")
+  }
   opt = list(...)
   if (length(opt) == 0)
     cmd <- paste0("read_csv('", path, "')")
@@ -94,6 +112,9 @@ tbl_csv <- function(conn, path, ..., lower = FALSE, verbose = FALSE) {
 #' @return liste List of duckdb tables
 #' @export
 tbl_list <- function(conn, paths, level = 0, lower = FALSE, verbose = FALSE) {
+  if (!is.character(paths) || length(paths) == 0) {
+    stop("'paths' must be a non-empty character vector.")
+  }
   lapply(
     paths,
     function(x) {
