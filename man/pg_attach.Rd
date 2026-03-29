@@ -4,7 +4,13 @@
 \alias{pg_attach}
 \title{Attaches a Postgres database to duckdb}
 \usage{
-pg_attach(conn, param, db = "pg", schema = "public")
+pg_attach(
+  conn,
+  param,
+  db = "pg",
+  schema = "public",
+  password_env = "PASSWORDINSEE"
+)
 }
 \arguments{
 \item{conn}{duckdb connection, can be obtained via the get_conn function}
@@ -14,6 +20,9 @@ pg_attach(conn, param, db = "pg", schema = "public")
 \item{db}{alias name for the database}
 
 \item{schema}{Postgres schema name, defaults to 'public'}
+
+\item{password_env}{Name of the environment variable holding the Postgres
+password, defaults to 'PASSWORDINSEE'}
 }
 \value{
 dbExecute return code

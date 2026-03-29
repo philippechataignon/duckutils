@@ -49,7 +49,6 @@ db$disconnect()
 \item \href{#method-duckdb_conn-print}{\code{duckdb_conn$print()}}
 \item \href{#method-duckdb_conn-is_connected}{\code{duckdb_conn$is_connected()}}
 \item \href{#method-duckdb_conn-renew}{\code{duckdb_conn$renew()}}
-\item \href{#method-duckdb_conn-refresh}{\code{duckdb_conn$refresh()}}
 \item \href{#method-duckdb_conn-disconnect}{\code{duckdb_conn$disconnect()}}
 \item \href{#method-duckdb_conn-clone}{\code{duckdb_conn$clone()}}
 }
@@ -124,16 +123,6 @@ Renews the connection without changing the duckdb_conn object.
 Warning: all in-memory tables are lost
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{duckdb_conn$renew()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-duckdb_conn-refresh"></a>}}
-\if{latex}{\out{\hypertarget{method-duckdb_conn-refresh}{}}}
-\subsection{Method \code{refresh()}}{
-Refreshes the S3 connection credentials
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{duckdb_conn$refresh()}\if{html}{\out{</div>}}
 }
 
 }
