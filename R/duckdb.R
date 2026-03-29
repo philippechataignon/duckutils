@@ -134,7 +134,8 @@ tbl_db <- function(conn, db, verbose=FALSE) {
   if (verbose) {
     print(tables)
   }
-  lapplyn(tables, function(x) dplyr::tbl(conn, paste0(db, ".", x)))
+  ret = lapply(tables, function(x) dplyr::tbl(conn, paste0(db, ".", x)))
+  names(ret) = tables
 }
 
 #' Returns a list of tables from a duckdb database
