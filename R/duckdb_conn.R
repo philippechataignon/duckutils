@@ -85,14 +85,6 @@ duckdb_conn <- R6Class(
       invisible(self)
     },
     #' @description
-    #' Refreshes the S3 connection credentials
-    refresh = function() {
-      if (self$is_connected()) {
-        refresh_secret(private$pconn)
-      }
-      invisible(self)
-    },
-    #' @description
     #' Disconnects the current connection. A new connection will be created
     #' on the next call to '$conn'.
     #' Warning: all in-memory tables are lost

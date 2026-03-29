@@ -10,7 +10,7 @@ tbl_list(conn, paths, level = 0, lower = FALSE, verbose = FALSE)
 \arguments{
 \item{conn}{duckdb connection}
 
-\item{liste}{List of paths to 'parquet' files}
+\item{paths}{List of paths to 'parquet' files}
 }
 \value{
 liste List of duckdb tables

@@ -16,4 +16,5 @@ Imports:
   dbplyr,
   dplyr,
   duckdb,
-  glue
+  glue,
+  R6
